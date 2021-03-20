@@ -20,5 +20,4 @@ dockerCompose {
 postman {
     collections = fileTree(dir: "postman", include: "*_collection.json")
     environment = file("postman/idv-local.postman_environment.json")
-    stopOnError = true
 }
