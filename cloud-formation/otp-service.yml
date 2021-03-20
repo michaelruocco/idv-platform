@@ -28,7 +28,7 @@ Parameters:
     Description: Number of seconds to wait between each health check.
   ImageUrl:
     Type: String
-    Default: michaelruocco/idv-one-time-passcode-spring-app:0.1.2-implement-protect-sensitive-data-SNAPSHOT
+    Default: michaelruocco/idv-one-time-passcode-spring-app:latest
     Description: The url of a docker image that will handle incoming traffic.
   ContainerPort:
     Type: Number

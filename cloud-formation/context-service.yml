@@ -28,7 +28,7 @@ Parameters:
     Description: Number of seconds to wait between each health check.
   ImageUrl:
     Type: String
-    Default: michaelruocco/idv-context-spring-app:0.1.9-java-15-SNAPSHOT
+    Default: michaelruocco/idv-context-spring-app:latest
     Description: The url of a docker image that will handle incoming traffic.
   ContainerPort:
     Type: Number

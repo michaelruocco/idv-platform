@@ -13,8 +13,8 @@ gradleLint {
 
 dockerCompose {
     startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment.put "OTP_APP_VERSION", "0.1.2-implement-protect-sensitive-data-SNAPSHOT"
-    environment.put "CONTEXT_APP_VERSION", "0.1.9-java-15-SNAPSHOT"
+    environment.put "OTP_APP_VERSION", "latest"
+    environment.put "CONTEXT_APP_VERSION", "latest"
 }
 
 postman {
