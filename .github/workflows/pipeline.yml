@@ -3,7 +3,7 @@ name: pipeline
 on:
   push:
     branches-ignore:
-      - 'library-template-*'
+      - 'idv-platform-*'
 
 jobs:
   build:
@@ -17,14 +17,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
-
-      - name: Setup SonarCloud Cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          java-version: 15
 
       - name: Setup Gradle Cache
         uses: actions/cache@v2
@@ -36,52 +29,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      - name: Print Current Version
-        run: ./gradlew currentVersion
-
-      - name: Check Dependencies
-        run: ./gradlew dependencyUpdates
-
-      - name: Build
-        run: ./gradlew clean spotlessCheck lintGradle assemble
-
       - name: Test
-        run: ./gradlew test
-
-      - name: Sonar Analysis
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube
-
-      - name: Codecov Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./build/reports/jacoco/report.xml
-
-      - name: Codacy Coverage
-        uses: codacy/codacy-coverage-reporter-action@master
-        with:
-          project-token: ${{ secrets.CODACY_TOKEN }}
-          coverage-reports: ./build/reports/jacoco/report.xml
-
-      - name: Publish snapshot
-        if: github.ref != 'refs/heads/master'
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          OSSRH_PGP_SECRET_KEY: ${{ secrets.OSSRH_PGP_SECRET_KEY }}
-          OSSRH_PGP_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_PGP_SECRET_KEY_PASSWORD }}
-        run: ./gradlew publish
-
-      - name: Release
-        if: github.ref == 'refs/heads/master'
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          OSSRH_PGP_SECRET_KEY: ${{ secrets.OSSRH_PGP_SECRET_KEY }}
-          OSSRH_PGP_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_PGP_SECRET_KEY_PASSWORD }}
-        run: |
-          ./gradlew release -Prelease.customUsername=${{ github.actor }} -Prelease.customPassword=${{ github.token }}
-          ./gradlew publish closeAndReleaseRepository
-          ./gradlew currentVersion
+        run: ./gradlew composeUp postman composeDown

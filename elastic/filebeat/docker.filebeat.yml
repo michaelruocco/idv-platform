@@ -1,0 +1,26 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      labels.dedot: true
+      templates:
+        - condition:
+            contains:
+              docker.idv:
+                context.container.name: "idv-context-spring-app"
+                otp.container.name: "idv-one-time-passcode-spring-app"
+          config:
+            - type: container
+              format: docker
+              paths:
+                - "/var/lib/docker/containers/${data.docker.idv.context.container.id}/*.log"
+                - "/var/lib/docker/containers/${data.docker.idv.otp.container.id}/*.log"
+              processors:
+                - decode_json_fields:
+                    fields: [ "message" ]
+                    target: ""
+                    overwrite_keys: true
+
+output.logstash:
+  hosts: "elk:5045"
+
+logging.metrics.enabled: false

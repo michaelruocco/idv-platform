@@ -1,75 +1,76 @@
-# Library Template
+# IDV Platform
 
-[![Build](https://github.com/michaelruocco/library-template/workflows/pipeline/badge.svg)](https://github.com/michaelruocco/library-template/actions)
-[![codecov](https://codecov.io/gh/michaelruocco/library-template/branch/master/graph/badge.svg?token=FWDNP534O7)](https://codecov.io/gh/michaelruocco/library-template)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/272889cf707b4dcb90bf451392530794)](https://www.codacy.com/gh/michaelruocco/library-template/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaelruocco/library-template&amp;utm_campaign=Badge_Grade)
-[![BCH compliance](https://bettercodehub.com/edge/badge/michaelruocco/library-template?branch=master)](https://bettercodehub.com/)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_library-template&metric=alert_status)](https://sonarcloud.io/dashboard?id=michaelruocco_library-template)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_library-template&metric=sqale_index)](https://sonarcloud.io/dashboard?id=michaelruocco_library-template)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_library-template&metric=coverage)](https://sonarcloud.io/dashboard?id=michaelruocco_library-template)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_library-template&metric=ncloc)](https://sonarcloud.io/dashboard?id=michaelruocco_library-template)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.michaelruocco/library-template.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.michaelruocco%22%20AND%20a:%22library-template%22)
+[![Build](https://github.com/michaelruocco/idv-platform/workflows/pipeline/badge.svg)](https://github.com/michaelruocco/idv-platform/actions)
+[![codecov](https://codecov.io/gh/michaelruocco/idv-platform/branch/master/graph/badge.svg?token=FWDNP534O7)](https://codecov.io/gh/michaelruocco/idv-platform)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/272889cf707b4dcb90bf451392530794)](https://www.codacy.com/gh/michaelruocco/idv-platform/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaelruocco/idv-platform&amp;utm_campaign=Badge_Grade)
+[![BCH compliance](https://bettercodehub.com/edge/badge/michaelruocco/idv-platform?branch=master)](https://bettercodehub.com/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=alert_status)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=sqale_index)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=coverage)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=ncloc)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.michaelruocco/idv-platform.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.michaelruocco%22%20AND%20a:%22idv-platform%22)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-This is a template project for creating library projects more quickly. It does not include test
-fixtures or integration tests as these are not always required, but attempts to give the other
-commonly used components that I like to use on library projects including:
+This is a repo for integration testing and deploying to components of the IDV platform to AWS. So far the
+platform includes the following services:
 
-*   [Lombok](https://projectlombok.org/) for boilerplate code generation
+* [idv-context](https://github.com/michaelruocco/idv-context)
+* [idv-one-time-passcode](https://github.com/michaelruocco/idv-one-time-passcode)
 
-*   [AssertJ](https://joel-costigliola.github.io/assertj/) for fluent and readable assertions
+### Running the platform locally
 
-*   [SLF4J](http://www.slf4j.org/) for abstracted and pluggable logging
+To run the platform on your local machine you can run the gradle task that will use docker compose to run
+the platform services together.
 
-*   [JUnit5](https://junit.org/junit5/) for unit testing
+```
+./gradlew composeUp
+```
 
-*   [Mockito](https://site.mockito.org/) for mocking
+To spin it back down again you can run:
 
-*   [Axion release plugin](https://github.com/allegro/axion-release-plugin) for version management
+```
+./gradlew composeDown
+```
 
-*   [Spotless plugin](https://github.com/diffplug/spotless/tree/main/plugin-gradle) for code formatting
+### Testing the platform locally
 
-*   [Nebula plugin](https://github.com/nebula-plugins/gradle-lint-plugin) for gradle linting
+The command below will spin up the services, run the postman collections testing the platform and then
+spin the services back down again.
 
-*   [Versions plugin](https://github.com/ben-manes/gradle-versions-plugin) for monitoring dependency versions
+```
+./gradlew composeUp postman composeDown
+```
 
-*   [Jacoco plugin](https://docs.gradle.org/current/userguide/jacoco_plugin.html) for code coverage reporting
+### AWS
 
-*   [Github actions](https://github.com/actions) for the build pipeline
+The below commands can be used to use cloudformation to deploy the service on AWS.
+A great description of how these templates work is [here](https://reflectoring.io/aws-cloudformation-deploy-docker-image/).
 
-*   [Maven publish plugin](https://docs.gradle.org/current/userguide/publishing_maven.html) for publishing snapshots
-    and releases to [Maven Central](https://search.maven.org/)
-    
-*   [Nexus staging plugin](https://github.com/Codearte/gradle-nexus-staging-plugin) to automatically close and drop
-    releases published to [Maven Central](https://search.maven.org/)
+#### Creating AWS resources
 
-*   [Better code hub](https://bettercodehub.com/) for code and architecture analysis
+```aws
+//generate network resources using cloud formation
+aws cloudformation create-stack --stack-name idv-test-network --template-body file://cloud-formation/network.yml --capabilities CAPABILITY_IAM
+```
 
-*   [Codecov](https://codecov.io/) for code coverage analysis
+```aws
+//generate service resources using cloud formation (relies on network stack already being created)
+aws cloudformation create-stack --stack-name idv-test-context-service --template-body file://cloud-formation/context-service.yml --parameters ParameterKey=MongoConnectionString,ParameterValue=<mongo-connection-string>
+aws cloudformation create-stack --stack-name idv-test-otp-service --template-body file://cloud-formation/otp-service.yml --parameters ParameterKey=MongoConnectionString,ParameterValue=<mongo-connection-string>
+```
 
-*   [Sonar Cloud](https://sonarcloud.io/) for static code analysis 
+#### Update image used by running task
 
-*   [Codacy](https://www.codacy.com/) for additional static code and coverage analysis
+```aws
+aws ecs update-service --cluster idv-test --service idv-context --force-new-deployment
+```
 
-For a number of the above tools to work your Github Actions pipeline will require the
-following secrets to be set up:
+#### Deleting AWS resources
 
-*   SONAR_TOKEN for [Sonar Cloud](https://sonarcloud.io/) analysis
-*   CODACY_TOKEN for [Codacy](https://www.codacy.com/) analysis
-*   OSSRH_USERNAME and OSSRH_PASSWORD for releasing snapshots and releases to Maven Central
-*   OSSRH_PGP_SECRET_KEY and OSSRH_PGP_SECRET_KEY_PASSWORD for signing release artifacts before pushing to maven central
-
-## Useful Commands
-
-```gradle
-// cleans build directories
-// prints currentVersion
-// formats code
-// builds code
-// runs tests
-// checks for gradle issues
-// checks dependency versions
-./gradlew clean currentVersion dependencyUpdates lintGradle spotlessApply build
+```aws
+aws cloudformation delete-stack --stack-name idv-test-context-service;
+aws cloudformation delete-stack --stack-name idv-test-otp-service;
+aws cloudformation delete-stack --stack-name idv-test-network;
 ```

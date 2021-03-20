@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "01edea31-4c81-4ead-8bbb-8babb7133cf4",
+		"name": "idv-platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "abc-online-purchase-journey-sms-otp",
+			"item": [
+				{
+					"name": "create-context-online-purchase",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = JSON.parse(responseBody);",
+									"var alias = json.aliases[0];",
+									"var sequences = json.sequences;",
+									"var otpMethod = sequences[0].stages[0].methods[0];",
+									"",
+									"postman.setEnvironmentVariable(\"contextId\", json.id);",
+									"postman.setEnvironmentVariable(\"aliasType\", alias.type);",
+									"postman.setEnvironmentVariable(\"aliasValue\", alias.value);",
+									"postman.setEnvironmentVariable(\"deliveryMethodId\", otpMethod.deliveryMethods[2].id);",
+									"",
+									"pm.test(\"should return created status\", function () {",
+									"    pm.response.to.have.status(201)",
+									"})",
+									"",
+									"pm.test(\"context should contain 1 sequence\", function () {",
+									"    pm.expect(sequences.length).to.equal(1)",
+									"})",
+									"",
+									"pm.test(\"all sequences should be eligible\", function () {",
+									"    sequences.find(sequence => {",
+									"        pm.expect(sequence.eligibility.eligible).to.eql(true)",
+									"    }); ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable('timestampUtc', (new Date()).toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Correlation-Id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "Channel-Id",
+								"value": "{{channelId}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"channel\": {\n        \"id\": \"abc\",\n        \"country\": \"GB\",\n        \"validCookie\": true,\n        \"phoneNumbers\": [\n            {\n                \"value\": \"07809385580\"\n            }\n        ],\n        \"emailAddresses\": [\n            \"michael.ruocco@hotmail.com\"\n        ]\n    },\n    \"activity\": {\n        \"name\": \"online-purchase\",\n        \"timestamp\": \"{{timestampUtc}}\",\n        \"merchantName\": \"Amazon\",\n        \"reference\": \"ABC123\",\n        \"cost\": {\n            \"amount\": 10.99,\n            \"currency\": \"GBP\"\n        },\n        \"card\": {\n           \"number\": \"4929111111111111\",\n           \"expiry\": \"2025-12\"\n        }\n    },\n    \"aliases\": [\n        {\n            \"type\": \"credit-card-number\",\n            \"value\": \"4929111111111111\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{context-host}}/v1/contexts",
+							"host": [
+								"{{context-host}}"
+							],
+							"path": [
+								"v1",
+								"contexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = JSON.parse(responseBody);",
+									"var lastDeliveryIndex = json.deliveries.values.length - 1;",
+									"postman.setEnvironmentVariable(\"otpVerificationId\", json.id);",
+									"postman.setEnvironmentVariable(\"otpPasscode\", json.deliveries.values[lastDeliveryIndex].message.passcode.value);",
+									"",
+									"pm.test(\"should return created status\", function () {",
+									"    pm.response.to.have.status(201)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable('timestampUtc', (new Date()).toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Correlation-Id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "Channel-Id",
+								"name": "Content-Type",
+								"value": "{{channelId}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contextId\": \"{{contextId}}\",\n    \"deliveryMethodId\": \"{{deliveryMethodId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{otp-host}}/v1/otp-verifications",
+							"host": [
+								"{{otp-host}}"
+							],
+							"path": [
+								"v1",
+								"otp-verifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"should return ok status\", function () {",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable('timestampUtc', (new Date()).toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Correlation-Id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "Channel-Id",
+								"value": "{{channelId}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{otpVerificationId}}\",\n    \"passcodes\": [\n        \"{{otpPasscode}}\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{otp-host}}/v1/otp-verifications",
+							"host": [
+								"{{otp-host}}"
+							],
+							"path": [
+								"v1",
+								"otp-verifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = JSON.parse(responseBody);",
+									"var lastDeliveryIndex = json.deliveries.values.length - 1;",
+									"postman.setEnvironmentVariable(\"otpVerificationId\", json.id);",
+									"postman.setEnvironmentVariable(\"otpPasscode\", json.deliveries.values[lastDeliveryIndex].message.passcode.value);",
+									"",
+									"pm.test(\"should return ok status\", function () {",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable('timestampUtc', (new Date()).toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Correlation-Id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "Channel-Id",
+								"value": "{{channelId}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{otpVerificationId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{otp-host}}/v1/otp-verifications/passcodes",
+							"host": [
+								"{{otp-host}}"
+							],
+							"path": [
+								"v1",
+								"otp-verifications",
+								"passcodes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"otpVerificationId\", json.id);",
+									"postman.setEnvironmentVariable(\"otpPasscode\", json.deliveries.values[0].message.passcode.value);",
+									"",
+									"pm.test(\"should return ok status\", function () {",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable('timestampUtc', (new Date()).toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Correlation-Id",
+								"type": "text",
+								"value": "{{$guid}}"
+							},
+							{
+								"key": "Channel-Id",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "{{channelId}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{otp-host}}/v1/otp-verifications/{{otpVerificationId}}",
+							"host": [
+								"{{otp-host}}"
+							],
+							"path": [
+								"v1",
+								"otp-verifications",
+								"{{otpVerificationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-lockout-state",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"should return ok status\", function () {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Correlation-Id",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"channelId\": \"{{channelId}}\",\n    \"activityName\": \"{{activityName}}\",\n    \"aliases\": [\n        {\n            \"type\": \"{{aliasType}}\",\n            \"value\": \"{{aliasValue}}\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{context-host}}/v1/lockout-states",
+							"host": [
+								"{{context-host}}"
+							],
+							"path": [
+								"v1",
+								"lockout-states"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
