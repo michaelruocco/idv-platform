@@ -74,7 +74,7 @@ services:
     environment:
       - SERVER_PORT=80
       - SPRING_PROFILES_ACTIVE=simple-logging
-      - CONTEXT_URI=http://host.docker.internal:8081
+      - CONTEXT_URI=http://idv-context-spring-app:80
       - AWS_ACCESS_KEY=abc
       - AWS_SECRET_KEY=123
       - AWS_SNS_ENDPOINT_URI=http://aws-services:4566
