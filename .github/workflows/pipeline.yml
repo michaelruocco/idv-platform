@@ -30,6 +30,8 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Test
-        run: |
-          ./gradlew composeUp postman
-          docker logs idv-one-time-passcode-app
+        run: ./gradlew composeUp postman
+
+      - name: Print docker logs
+        if: ${{ always() }}
+        run: docker logs idv-one-time-passcode-app
