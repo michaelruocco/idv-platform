@@ -1,15 +1,6 @@
 # IDV Platform
 
 [![Build](https://github.com/michaelruocco/idv-platform/workflows/pipeline/badge.svg)](https://github.com/michaelruocco/idv-platform/actions)
-[![codecov](https://codecov.io/gh/michaelruocco/idv-platform/branch/master/graph/badge.svg?token=FWDNP534O7)](https://codecov.io/gh/michaelruocco/idv-platform)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/272889cf707b4dcb90bf451392530794)](https://www.codacy.com/gh/michaelruocco/idv-platform/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaelruocco/idv-platform&amp;utm_campaign=Badge_Grade)
-[![BCH compliance](https://bettercodehub.com/edge/badge/michaelruocco/idv-platform?branch=master)](https://bettercodehub.com/)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=alert_status)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=sqale_index)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=coverage)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_idv-platform&metric=ncloc)](https://sonarcloud.io/dashboard?id=michaelruocco_idv-platform)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.michaelruocco/idv-platform.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.michaelruocco%22%20AND%20a:%22idv-platform%22)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
