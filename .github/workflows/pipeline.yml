@@ -30,4 +30,6 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Test
-        run: ./gradlew composeUp postman composeDown
+        run: |
+          ./gradlew composeUp postman
+          docker logs idv-one-time-passcode-app
