@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - 'idv-platform-*'
+  schedule:
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       idvContextVersion:
@@ -14,7 +16,7 @@ on:
         description: 'idv-one-time-passcode version'
         required: false
         default: 'latest'
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
