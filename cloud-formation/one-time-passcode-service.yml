@@ -16,11 +16,11 @@ Parameters:
       these resources are put into.
   ServiceName:
     Type: String
-    Default: idv-otp
+    Default: idv-one-time-passcode
     Description: A human-readable name for the service.
   HealthCheckPath:
     Type: String
-    Default: /idv-otp/actuator/health
+    Default: /idv-one-time-passcode/actuator/health
     Description: Path to perform the healthcheck on each instance.
   HealthCheckIntervalSeconds:
     Type: Number
@@ -45,7 +45,7 @@ Parameters:
     Description: How much memory in megabytes to give the container.
   Path:
     Type: String
-    Default: /idv-otp/
+    Default: /idv-one-time-passcode/
     Description: A path on the public load balancer that this service
       should be connected to.
   DesiredCount:

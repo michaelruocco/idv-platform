@@ -49,19 +49,20 @@ aws cloudformation create-stack --stack-name idv-test-network --template-body fi
 ```aws
 //generate service resources using cloud formation (relies on network stack already being created)
 aws cloudformation create-stack --stack-name idv-test-context-service --template-body file://cloud-formation/context-service.yml --parameters ParameterKey=MongoConnectionString,ParameterValue=<mongo-connection-string>
-aws cloudformation create-stack --stack-name idv-test-otp-service --template-body file://cloud-formation/otp-service.yml --parameters ParameterKey=MongoConnectionString,ParameterValue=<mongo-connection-string>
+aws cloudformation create-stack --stack-name idv-test-one-time-passcode-service --template-body file://cloud-formation/one-time-passcode-service.yml --parameters ParameterKey=MongoConnectionString,ParameterValue=<mongo-connection-string>
 ```
 
 #### Update image used by running task
 
 ```aws
 aws ecs update-service --cluster idv-test --service idv-context --force-new-deployment
+aws ecs update-service --cluster idv-test --service idv-one-time-passcode --force-new-deployment
 ```
 
 #### Deleting AWS resources
 
 ```aws
 aws cloudformation delete-stack --stack-name idv-test-context-service;
-aws cloudformation delete-stack --stack-name idv-test-otp-service;
+aws cloudformation delete-stack --stack-name idv-test-one-time-passcode-service;
 aws cloudformation delete-stack --stack-name idv-test-network;
 ```
