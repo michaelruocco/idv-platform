@@ -70,13 +70,13 @@ static toAppVersionVariable(name) {
     }
 }
 
-static toUrl(awsEnv,name) {
+static toUrl(awsEnv, name) {
     return String.format(awsEnv["urlTemplate"], name)
 }
 
 static toAwsEnv(name) {
     return [
-            "urlTemplate": "http://${name}-1672227626.eu-west-1.elb.amazonaws.com/%s/actuator/info",
+            "urlTemplate"   : "http://${name}-1672227626.eu-west-1.elb.amazonaws.com/%s/actuator/info",
             "ecsClusterName": name
     ]
 }
