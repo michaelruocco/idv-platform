@@ -50,9 +50,11 @@ def getOrDefaultProperty(String name, String defaultValue) {
 static buildLocalDockerEnvironment(name, version) {
     def env = buildDefaultDockerEnvironment()
     if (!name || !version) {
+        println "RETURNING DOCKER ENV ${env}"
         return env
     }
     env.put(toAppVersionVariable(name), version)
+    println "RETURNING DOCKER ENV WITH SERVICE ${env}"
     return env
 }
 
