@@ -18,10 +18,16 @@ def serviceVersion = getOrDefaultProperty("deployServiceVersion", "")
 
 dockerCompose {
     startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
+    environment.put "OTP_APP_VERSION", "latest"
+    environment.put "CONTEXT_APP_VERSION", "latest"
 }
 
-postman {
+//dockerCompose {
+//    startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
+//    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
+//}
+
+/*postman {
     collections = fileTree(dir: "postman", include: "*_collection.json")
 }
 
@@ -31,6 +37,11 @@ task localEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
 
 task testEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
     environment = file("postman/idv-test.postman_environment.json")
+}*/
+
+postman {
+    collections = fileTree(dir: "postman", include: "*_collection.json")
+    environment = file("postman/idv-local.postman_environment.json")
 }
 
 pollRestGetEndpoint {

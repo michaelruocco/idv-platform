@@ -31,11 +31,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      - name: Print docker-compose version
-        run: docker-compose --version
-
-      - name: Local Environment Test
-        run: ./gradlew composeUp localEnvPostman composeDown
-
-      - name: Test EnvironmentTest
-        run: ./gradlew testEnvPostman
+      - name: Test
+        run: ./gradlew composeUp postman composeDown
