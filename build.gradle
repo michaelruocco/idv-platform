@@ -4,6 +4,7 @@ plugins {
     id "com.avast.gradle.docker-compose" version "0.14.0"
     id "com.moowork.node" version "1.3.1"
     id "com.github.michaelruocco.gradle-postman-runner" version "0.1.2"
+    id "com.github.michaelruocco.rest-polling" version "0.1.1"
 }
 
 gradleLint {
@@ -11,13 +12,71 @@ gradleLint {
     alwaysRun = false
 }
 
+def awsEnv = toAwsEnv("idv-test")
+def serviceName = getOrDefaultProperty("deployServiceName", "")
+def serviceVersion = getOrDefaultProperty("deployServiceVersion", "")
+
 dockerCompose {
     startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment.put "OTP_APP_VERSION", "latest"
-    environment.put "CONTEXT_APP_VERSION", "latest"
+    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
 }
 
 postman {
     collections = fileTree(dir: "postman", include: "*_collection.json")
+}
+
+task localEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
     environment = file("postman/idv-local.postman_environment.json")
+}
+
+task testEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
+    environment = file("postman/idv-test.postman_environment.json")
+}
+
+pollRestGetEndpoint {
+    uri = toUrl(awsEnv, serviceName)
+    minConsecutiveValidRequests = 3
+    expectedValues = ["build.version": serviceVersion]
+    atMost = "PT10S"
+}
+
+def getOrDefaultProperty(String name, String defaultValue) {
+    if (project.hasProperty(name)) {
+        return project.getProperty(name)
+    }
+    return defaultValue
+}
+
+static buildLocalDockerEnvironment(name, version) {
+    def env = buildDefaultDockerEnvironment()
+    if (!name || !version) {
+        return env
+    }
+    env.put(toAppVersionVariable(name), version)
+    return env
+}
+
+static buildDefaultDockerEnvironment() {
+    return [
+            "OTP_APP_VERSION"    : "latest",
+            "CONTEXT_APP_VERSION": "latest"
+    ]
+}
+
+static toAppVersionVariable(name) {
+    switch (name) {
+        case "idv-context": return "CONTEXT_APP_VERSION"
+        case "idv-one-time-passcode": return "OTP_APP_VERSION"
+    }
+}
+
+static toUrl(awsEnv,name) {
+    return String.format(awsEnv["urlTemplate"], name)
+}
+
+static toAwsEnv(name) {
+    return [
+            "urlTemplate": "http://${name}-1672227626.eu-west-1.elb.amazonaws.com/%s/actuator/info",
+            "ecsClusterName": name
+    ]
 }

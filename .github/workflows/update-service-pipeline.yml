@@ -1,0 +1,59 @@
+name: pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      serviceName:
+        description: "updated service name"
+        required: true
+      serviceVersion:
+        description: "updated service version"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      - name: Local Environment Test
+        run: ./gradlew composeUp localEnvPostman composeDown -PdeployServiceName=${github.event.inputs.name.serviceName} -PdeployServiceVersion=${github.event.inputs.name.serviceVersion}
+
+      - name: Tag and Push Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker pull michaelruocco/${github.event.inputs.name.serviceName}:${github.event.inputs.name.serviceVersion}
+          docker tag michaelruocco/${github.event.inputs.name.serviceName}:${github.event.inputs.name.serviceVersion} michaelruocco/${github.event.inputs.name.serviceName}:latest
+          docker push michaelruocco/${github.event.inputs.name.serviceName}:latest
+
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws ecs update-service --cluster idv-test --service ${github.event.inputs.name.serviceName} --force-new-deployment
+          aws ecs wait services-stable --cluster idv-test --services ${github.event.inputs.name.serviceName}
+          ./gradlew pollRestGetEndpoint -PdeployServiceName=${github.event.inputs.name.serviceName} -PdeployServiceVersion=${github.event.inputs.name.serviceVersion}
+
+      - name: Test EnvironmentTest
+        run: ./gradlew testEnvPostman
