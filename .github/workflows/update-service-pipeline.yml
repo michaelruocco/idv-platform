@@ -35,25 +35,25 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Local Environment Test
-        run: ./gradlew composeUp localEnvPostman composeDown -PdeployServiceName=${{github.event.inputs.name.serviceName}} -PdeployServiceVersion=${{github.event.inputs.name.serviceVersion}}
+        run: ./gradlew composeUp localEnvPostman composeDown -PdeployServiceName=${{github.event.inputs.serviceName}} -PdeployServiceVersion=${{github.event.inputs.serviceVersion}}
 
       - name: Tag and Push Image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker pull michaelruocco/${{github.event.inputs.name.serviceName}}:${{github.event.inputs.name.serviceVersion}}
-          docker tag michaelruocco/${{github.event.inputs.name.serviceName}}:${{github.event.inputs.name.serviceVersion}} michaelruocco/${{github.event.inputs.name.serviceName}}:latest
-          docker push michaelruocco/${{github.event.inputs.name.serviceName}}:latest
+          docker pull michaelruocco/${{github.event.inputs.serviceName}}:${{github.event.inputs.serviceVersion}}
+          docker tag michaelruocco/${{github.event.inputs.serviceName}}:${{github.event.inputs.serviceVersion}} michaelruocco/${{github.event.inputs.serviceName}}:latest
+          docker push michaelruocco/${{github.event.inputs.serviceName}}:latest
 
       - name: Deploy
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         run: |
-          aws ecs update-service --cluster idv-test --service ${{github.event.inputs.name.serviceName}} --force-new-deployment
-          aws ecs wait services-stable --cluster idv-test --services ${{github.event.inputs.name.serviceName}}
-          ./gradlew pollRestGetEndpoint -PdeployServiceName=${{github.event.inputs.name.serviceName}} -PdeployServiceVersion=${{github.event.inputs.name.serviceVersion}}
+          aws ecs update-service --cluster idv-test --service ${{github.event.inputs.serviceName}} --force-new-deployment
+          aws ecs wait services-stable --cluster idv-test --services ${{github.event.inputs.serviceName}}
+          ./gradlew pollRestGetEndpoint -PdeployServiceName=${{github.event.inputs.serviceName}} -PdeployServiceVersion=${{github.event.inputs.serviceVersion}}
 
       - name: Test EnvironmentTest
         run: ./gradlew testEnvPostman
