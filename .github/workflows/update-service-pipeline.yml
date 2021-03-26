@@ -42,9 +42,9 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker pull michaelruocco/${{github.event.inputs.serviceName}}:${{github.event.inputs.serviceVersion}}
-          docker tag michaelruocco/${{github.event.inputs.serviceName}}:${{github.event.inputs.serviceVersion}} michaelruocco/${{github.event.inputs.serviceName}}:latest
-          docker push michaelruocco/${{github.event.inputs.serviceName}}:latest
+          docker pull michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}}-spring-app
+          docker tag michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}} michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
+          docker push michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
 
       - name: Deploy
         env:
