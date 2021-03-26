@@ -16,16 +16,16 @@ def awsEnv = toAwsEnv("idv-test")
 def serviceName = getOrDefaultProperty("deployServiceName", "")
 def serviceVersion = getOrDefaultProperty("deployServiceVersion", "")
 
-dockerCompose {
-    startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment.put "OTP_APP_VERSION", "latest"
-    environment.put "CONTEXT_APP_VERSION", "latest"
-}
-
 //dockerCompose {
 //    startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-//    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
+//    environment.put "OTP_APP_VERSION", "latest"
+//    environment.put "CONTEXT_APP_VERSION", "latest"
 //}
+
+dockerCompose {
+    startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
+    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
+}
 
 postman {
     collections = fileTree(dir: "postman", include: "*_collection.json")
