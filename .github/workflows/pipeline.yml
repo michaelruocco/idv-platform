@@ -31,5 +31,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      - name: Test
-        run: ./gradlew composeUp postman composeDown
+      - name: Local Environment Test
+        run: ./gradlew composeUp localEnvPostman composeDown
+
+      - name: Test EnvironmentTest
+        run: ./gradlew testEnvPostman

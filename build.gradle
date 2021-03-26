@@ -27,7 +27,7 @@ dockerCompose {
 //    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
 //}
 
-/*postman {
+postman {
     collections = fileTree(dir: "postman", include: "*_collection.json")
 }
 
@@ -37,11 +37,6 @@ task localEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
 
 task testEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
     environment = file("postman/idv-test.postman_environment.json")
-}*/
-
-postman {
-    collections = fileTree(dir: "postman", include: "*_collection.json")
-    environment = file("postman/idv-local.postman_environment.json")
 }
 
 pollRestGetEndpoint {
