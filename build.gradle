@@ -24,7 +24,7 @@ def serviceVersion = getOrDefaultProperty("deployServiceVersion", "")
 
 dockerCompose {
     startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment = buildLocalDockerEnvironment(serviceName, serviceVersion)
+    environment.addAll(buildLocalDockerEnvironment(serviceName, serviceVersion))
 }
 
 postman {
