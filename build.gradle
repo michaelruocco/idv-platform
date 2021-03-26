@@ -16,15 +16,10 @@ def awsEnv = toAwsEnv("idv-test")
 def serviceName = getOrDefaultProperty("deployServiceName", "")
 def serviceVersion = getOrDefaultProperty("deployServiceVersion", "")
 
-//dockerCompose {
-//    startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-//    environment.put "OTP_APP_VERSION", "latest"
-//    environment.put "CONTEXT_APP_VERSION", "latest"
-//}
-
 dockerCompose {
     startedServices = ["idv-one-time-passcode-app", "idv-context-spring-app"]
-    environment.addAll(buildLocalDockerEnvironment(serviceName, serviceVersion))
+    environment.put "OTP_APP_VERSION", calculateVersion("idv-one-time-passcode", serviceName, serviceVersion)
+    environment.put "CONTEXT_APP_VERSION", calculateVersion("idv-context", serviceName, serviceVersion)
 }
 
 postman {
@@ -53,38 +48,21 @@ def getOrDefaultProperty(String name, String defaultValue) {
     return defaultValue
 }
 
-static buildLocalDockerEnvironment(name, version) {
-    def env = buildDefaultDockerEnvironment()
-    if (!name || !version) {
-        println "RETURNING DOCKER ENV ${env}"
-        return env
-    }
-    env.put(toAppVersionVariable(name), version)
-    println "RETURNING DOCKER ENV WITH SERVICE ${env}"
-    return env
-}
-
-static buildDefaultDockerEnvironment() {
-    return [
-            "OTP_APP_VERSION"    : "latest",
-            "CONTEXT_APP_VERSION": "latest"
-    ]
-}
-
-static toAppVersionVariable(name) {
-    switch (name) {
-        case "idv-context": return "CONTEXT_APP_VERSION"
-        case "idv-one-time-passcode": return "OTP_APP_VERSION"
-    }
-}
-
-static toUrl(awsEnv, name) {
-    return String.format(awsEnv["urlTemplate"], name)
-}
-
 static toAwsEnv(name) {
     return [
             "urlTemplate"   : "http://${name}-1672227626.eu-west-1.elb.amazonaws.com/%s/actuator/info",
             "ecsClusterName": name
     ]
 }
+
+static calculateVersion(deployName, name, version) {
+    if (name == deployName) {
+        return version
+    }
+    return "latest"
+}
+
+static toUrl(awsEnv, name) {
+    return String.format(awsEnv["urlTemplate"], name)
+}
+
