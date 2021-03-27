@@ -21,7 +21,7 @@ Resources:
       AvailabilityZone:
         Fn::Select:
           - 0
-          - Fn::GetAZs: {Ref: 'AWS::Region'}
+          - Fn::GetAZs: { Ref: 'AWS::Region' }
       VpcId: !Ref 'VPC'
       CidrBlock: '10.0.1.0/24'
       MapPublicIpOnLaunch: true
@@ -32,7 +32,7 @@ Resources:
       AvailabilityZone:
         Fn::Select:
           - 1
-          - Fn::GetAZs: {Ref: 'AWS::Region'}
+          - Fn::GetAZs: { Ref: 'AWS::Region' }
       VpcId: !Ref 'VPC'
       CidrBlock: '10.0.2.0/24'
       MapPublicIpOnLaunch: true
@@ -91,7 +91,7 @@ Resources:
         # from the internet can reach the load balancer directly via the internet gateway
         - !Ref PublicSubnetOne
         - !Ref PublicSubnetTwo
-      SecurityGroups: [!Ref 'PublicLoadBalancerSecurityGroup']
+      SecurityGroups: [ !Ref 'PublicLoadBalancerSecurityGroup' ]
 
   DummyTargetGroupPublic:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -153,8 +153,8 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ecs.amazonaws.com]
-            Action: ['sts:AssumeRole']
+              Service: [ ecs.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
       Path: /
       Policies:
         - PolicyName: ecs-service
@@ -188,8 +188,8 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ecs-tasks.amazonaws.com]
-            Action: ['sts:AssumeRole']
+              Service: [ ecs-tasks.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
       Path: /
       Policies:
         - PolicyName: AmazonECSTaskExecutionRolePolicy
@@ -209,7 +209,7 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ClusterName' ] ]
   ExternalUrl:
     Description: The url of the external load balancer
-    Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
+    Value: !Join [ '', [ 'http://', !GetAtt 'PublicLoadBalancer.DNSName' ] ]
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ExternalUrl' ] ]
   ECSRole:

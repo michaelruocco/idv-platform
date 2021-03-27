@@ -57,5 +57,5 @@ jobs:
           aws ecs wait services-stable --cluster idv-test --services ${{ github.event.inputs.serviceName }}
           ./gradlew pollRestGetEndpoint -PdeployServiceName=${{ github.event.inputs.serviceName }} -PdeployServiceVersion=${{ github.event.inputs.serviceVersion }}
 
-      - name: Test EnvironmentTest
+      - name: Test Environment Test
         run: ./gradlew testEnvPostman

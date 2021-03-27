@@ -50,7 +50,7 @@ def getOrDefaultProperty(String name, String defaultValue) {
 
 static toAwsEnv(name) {
     return [
-            "urlTemplate"   : "http://${name}-1672227626.eu-west-1.elb.amazonaws.com/%s/actuator/info",
+            "urlTemplate"   : "http://${name}-1405014929.eu-west-1.elb.amazonaws.com/%s/actuator/info",
             "ecsClusterName": name
     ]
 }

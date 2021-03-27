@@ -37,11 +37,11 @@ Parameters:
       is binding to.
   ContainerCpu:
     Type: Number
-    Default: 1024
+    Default: 512
     Description: How much CPU to give the container. 1024 is 1 CPU.
   ContainerMemory:
     Type: Number
-    Default: 2048
+    Default: 1024
     Description: How much memory in megabytes to give the container.
   Path:
     Type: String
@@ -59,7 +59,7 @@ Parameters:
       access other AWS resources like S3 buckets, DynamoDB tables, etc
 
 Conditions:
-  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
 
 Resources:
 
@@ -78,7 +78,7 @@ Resources:
       UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'VPCId']]
+          !Join [ ':', [ !Ref 'StackName', 'VPCId' ] ]
 
   LoadBalancerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -92,7 +92,7 @@ Resources:
             - !Sub '${Path}*'
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'PublicListener']]
+          !Join [ ':', [ !Ref 'StackName', 'PublicListener' ] ]
       Priority: 2
 
   TaskDefinition:
@@ -106,7 +106,7 @@ Resources:
         - FARGATE
       ExecutionRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'ECSTaskExecutionRole']]
+          !Join [ ':', [ !Ref 'StackName', 'ECSTaskExecutionRole' ] ]
       TaskRoleArn:
         Fn::If:
           - 'HasCustomRole'
@@ -150,7 +150,7 @@ Resources:
       ServiceName: !Ref 'ServiceName'
       Cluster:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'ClusterName']]
+          !Join [ ':', [ !Ref 'StackName', 'ClusterName' ] ]
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
@@ -161,12 +161,12 @@ Resources:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
+                !Join [ ':', [ !Ref 'StackName', 'ECSSecurityGroup' ] ]
           Subnets:
             - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+                !Join [ ':', [ !Ref 'StackName', 'PublicSubnetOne' ] ]
             - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
+                !Join [ ':', [ !Ref 'StackName', 'PublicSubnetTwo' ] ]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
