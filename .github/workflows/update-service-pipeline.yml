@@ -42,19 +42,19 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker pull michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}}
-          docker tag michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}} michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
-          docker login -u ${{DOCKER_USERNAME}} -p ${{DOCKER_PASSWORD}}
-          docker push michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
+          docker pull michaelruocco/${{ github.event.inputs.serviceName }}-spring-app:${{ github.event.inputs.serviceVersion }}
+          docker tag michaelruocco/${{ github.event.inputs.serviceName }}-spring-app:${{ github.event.inputs.serviceVersion }} michaelruocco/${{ github.event.inputs.serviceName }}-spring-app:latest
+          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }}
+          docker push michaelruocco/${{ github.event.inputs.serviceName }}-spring-app:latest
 
       - name: Deploy
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         run: |
-          aws ecs update-service --cluster idv-test --service ${{github.event.inputs.serviceName}} --force-new-deployment
-          aws ecs wait services-stable --cluster idv-test --services ${{github.event.inputs.serviceName}}
-          ./gradlew pollRestGetEndpoint -PdeployServiceName=${{github.event.inputs.serviceName}} -PdeployServiceVersion=${{github.event.inputs.serviceVersion}}
+          aws ecs update-service --cluster idv-test --service ${{ github.event.inputs.serviceName }} --force-new-deployment
+          aws ecs wait services-stable --cluster idv-test --services ${{ github.event.inputs.serviceName }}
+          ./gradlew pollRestGetEndpoint -PdeployServiceName=${{ github.event.inputs.serviceName }} -PdeployServiceVersion=${{ github.event.inputs.serviceVersion }}
 
       - name: Test EnvironmentTest
         run: ./gradlew testEnvPostman
