@@ -27,14 +27,22 @@ To spin it back down again you can run:
 
 ### Testing the platform locally
 
-The command below will spin up the services, run the postman collections testing the platform and then
-spin the services back down again.
+The command below will spin up the services, run the postman collections testing the platform
+locally and then spin the services back down again.
 
 ```
-./gradlew composeUp postman composeDown
+./gradlew composeUp localEnvPostman composeDown
 ```
 
-### AWS
+## AWS
+
+### Testing the platform against AWS
+
+The command below will run the postman collections testing the platform deployed in AWS.
+
+```
+./gradlew composeUp testEnvPostman composeDown
+```
 
 The below commands can be used to use cloudformation to deploy the service on AWS.
 A great description of how these templates work is [here](https://reflectoring.io/aws-cloudformation-deploy-docker-image/).
