@@ -10,6 +10,15 @@ platform includes the following services:
 * [idv-context](https://github.com/michaelruocco/idv-context)
 * [idv-one-time-passcode](https://github.com/michaelruocco/idv-one-time-passcode)
 
+## TODO
+
+*   Fix cloud formation templates to remove duplication of things like hostname when setting 
+    CONTEXT_URI in otp service
+*   Change deployment to use a task-definition rather than pushing to latest docker
+    image version and using force-new-deployment to refresh service
+*   Try using EC2 ECS cluster instead of Fargate as it will likely be cheaper
+*   Look into exposing services through API or updating load balancer to use HTTPS instead of HTTP
+
 ### Running the platform locally
 
 To run the platform on your local machine you can run the gradle task that will use docker compose to run
