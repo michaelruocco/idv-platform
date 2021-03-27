@@ -131,7 +131,7 @@ Resources:
             - Name: SERVER_SERVLET_CONTEXT_PATH
               Value: !Ref 'Path'
             - Name: CONTEXT_URI
-              Value: http://idv-test-1672227626.eu-west-1.elb.amazonaws.com/idv-context
+              Value: http://idv-test-1405014929.eu-west-1.elb.amazonaws.com/idv-context
             - Name: AWS_SNS_ENDPOINT_URI
               Value: https://sns.eu-west-1.amazonaws.com
             - Name: AWS_SES_ENDPOINT_URI
