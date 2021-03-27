@@ -44,6 +44,7 @@ jobs:
         run: |
           docker pull michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}}
           docker tag michaelruocco/${{github.event.inputs.serviceName}}-spring-app:${{github.event.inputs.serviceVersion}} michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
+          docker login -u ${{DOCKER_USERNAME}} -p ${{DOCKER_PASSWORD}}
           docker push michaelruocco/${{github.event.inputs.serviceName}}-spring-app:latest
 
       - name: Deploy
