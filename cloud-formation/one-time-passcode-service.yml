@@ -28,7 +28,7 @@ Parameters:
     Description: Number of seconds to wait between each health check.
   ImageUrl:
     Type: String
-    Default: michaelruocco/idv-one-time-passcode-spring-app:latest
+    Default: michaelruocco/idv-one-time-passcode-spring-app:0.1.4
     Description: The url of a docker image that will handle incoming traffic.
   ContainerPort:
     Type: Number
@@ -136,6 +136,10 @@ Resources:
               Value: https://sns.eu-west-1.amazonaws.com
             - Name: AWS_SES_ENDPOINT_URI
               Value: https://email.eu-west-1.amazonaws.com
+            - Name: JWK_SET_URI
+              Value: https://michaelruocco.eu.auth0.com/.well-known/jwks.json
+            - Name: JWT_SUBJECTS
+              VALUE: 0JOvOFQmnkqA78hHHCZABQ0ZI2oiuHxi
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:

@@ -26,10 +26,6 @@
 									"    pm.expect(json.access_token).to.not.eql(null)",
 									"})",
 									"",
-									"pm.test(\"should return expires in 1 hour in milliseconds\", function () {",
-									"    pm.expect(json.expires_in).to.eql(3600000)",
-									"})",
-									"",
 									"pm.test(\"should return bearer token type\", function () {",
 									"    pm.expect(json.token_type).to.eql(\"Bearer\")",
 									"})"

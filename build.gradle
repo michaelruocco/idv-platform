@@ -3,7 +3,7 @@ plugins {
     id "nebula.lint" version "16.17.1"
     id "com.avast.gradle.docker-compose" version "0.14.2"
     id "com.moowork.node" version "1.3.1"
-    id "com.github.michaelruocco.gradle-postman-runner" version "0.1.2"
+    id "com.github.michaelruocco.gradle-postman-runner" version "0.1.3"
     id "com.github.michaelruocco.rest-polling" version "0.1.1"
 }
 
@@ -32,6 +32,10 @@ task localEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
 
 task testEnvPostman(type: uk.co.mruoc.postman.task.PostmanTask) {
     environment = file("postman/idv-test.postman_environment.json")
+    envVars = [
+            "authClientId" : findProperty("auth.client.id"),
+            "authClientSecret" : findProperty("auth.client.secret")
+    ]
 }
 
 pollRestGetEndpoint {

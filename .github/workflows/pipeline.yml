@@ -35,4 +35,4 @@ jobs:
         run: ./gradlew composeUp localEnvPostman composeDown
 
       - name: Test EnvironmentTest
-        run: ./gradlew testEnvPostman
+        run: ./gradlew testEnvPostman -Pauth.client.id=${{ secrets.AUTH_CLIENT_ID }} -Pauth.client.secret=${{ secrets.AUTH_CLIENT_SECRET }}
