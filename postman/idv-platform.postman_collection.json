@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "01edea31-4c81-4ead-8bbb-8babb7133cf4",
+		"_postman_id": "9605b433-f07a-4da7-b8c5-126f36a9baf7",
 		"name": "idv-platform",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -8,6 +8,61 @@
 		{
 			"name": "abc-online-purchase-journey-sms-otp",
 			"item": [
+				{
+					"name": "generate-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json()",
+									"postman.setEnvironmentVariable(\"token\", json.token_type + \" \" + json.access_token)",
+									"",
+									"pm.test(\"should return ok status\", function () {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.test(\"should return token\", function () {",
+									"    pm.expect(json.access_token).to.not.eql(null)",
+									"})",
+									"",
+									"pm.test(\"should return expires in 1 hour in milliseconds\", function () {",
+									"    pm.expect(json.expires_in).to.eql(3600000)",
+									"})",
+									"",
+									"pm.test(\"should return bearer token type\", function () {",
+									"    pm.expect(json.token_type).to.eql(\"Bearer\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": \"{{authClientId}}\",\n    \"client_secret\": \"{{authClientSecret}}\",\n    \"audience\": \"https://idv-demo-api\",\n    \"grant_type\": \"client_credentials\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth-host}}/oauth/token",
+							"host": [
+								"{{auth-host}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "create-context-online-purchase",
 					"event": [
@@ -143,6 +198,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -204,6 +264,11 @@
 								"name": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -269,6 +334,11 @@
 								"key": "Content-Type",
 								"name": "Content-Type",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
@@ -339,6 +409,11 @@
 								"key": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
 							}
 						],
 						"body": {

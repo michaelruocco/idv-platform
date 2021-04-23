@@ -44,6 +44,15 @@ services:
       - DEFAULT_REGION=eu-west-1
       - SERVICES=sns,ses
 
+  auth-server:
+    image: michaelruocco/fake-jwt-auth-server:latest
+    container_name: auth-server
+    ports:
+      - 8099:80
+    environment:
+      - ISSUER=https://michaelruocco.eu.auth0.com/
+      - AUDIENCE=https://idv-demo-api
+
   idv-context-spring-app:
     image: michaelruocco/idv-context-spring-app:${CONTEXT_APP_VERSION}
     container_name: idv-context-spring-app
@@ -82,8 +91,11 @@ services:
       - MONGO_CONNECTION_STRING=mongodb://idv:welcome01@idv-mongo:27017/idv-local
       - REQUEST_LOGGING_ENABLED=true
       - RESPONSE_LOGGING_ENABLED=true
+      - JWK_SET_URI=http://auth-server:80/.well-known/jwks.json
+      - JWT_SUBJECTS=test-client-id
     depends_on:
       - aws-services
       - mongo
+      - auth-server
       - idv-context-spring-app
       #- filebeat
