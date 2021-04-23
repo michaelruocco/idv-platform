@@ -58,4 +58,4 @@ jobs:
           ./gradlew pollRestGetEndpoint -PdeployServiceName=${{ github.event.inputs.serviceName }} -PdeployServiceVersion=${{ github.event.inputs.serviceVersion }}
 
       - name: Test Environment Test
-        run: ./gradlew testEnvPostman
+        run: ./gradlew testEnvPostman -Pauth.client.id=${{ secrets.AUTH_CLIENT_ID }} -Pauth.client.secret=${{ secrets.AUTH_CLIENT_SECRET }}

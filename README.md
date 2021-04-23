@@ -14,6 +14,7 @@ platform includes the following services:
 
 *   Fix cloud formation templates to remove duplication of things like hostname when setting 
     CONTEXT_URI in otp service
+*   Tidy up cloud formation templates create and set execution role for context service (rather than being passed in)
 *   Change deployment to use a task-definition rather than pushing to latest docker
     image version and using force-new-deployment to refresh service
 *   Try using EC2 ECS cluster instead of Fargate as it will likely be cheaper
