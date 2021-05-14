@@ -35,7 +35,10 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Local Environment Test
-        run: ./gradlew composeUp localEnvPostman composeDown -PdeployServiceName=${{github.event.inputs.serviceName}} -PdeployServiceVersion=${{github.event.inputs.serviceVersion}}
+        run: |
+          docker volume ls
+          docker ps -a
+          ./gradlew composeUp localEnvPostman composeDown -PdeployServiceName=${{github.event.inputs.serviceName}} -PdeployServiceVersion=${{github.event.inputs.serviceVersion}}
 
       - name: Tag and Push Image
         env:
